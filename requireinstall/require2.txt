@@ -1,0 +1,778 @@
+Nội dung 2: Servlet and JSP
+persistence.xml
+
+persistence.xml
+Các yêu cầu hoàn thành
+
+
+Thư viện
+
+
+
+
+<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+
+
+<dependency>
+
+
+<groupId>org.hibernate</groupId>
+
+
+<artifactId>hibernate-core</artifactId>
+
+
+<version>6.6.1.Final</version>
+
+
+<scope>compile</scope>
+
+
+</dependency>
+
+
+=============
+
+
+2. persistence.xml
+
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence"
+
+
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+
+xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence 
+
+
+ https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+
+
+
+<!-- <persistence-unit name="jpa-hibernate-mysql"> 
+
+
+ <class>vn.iotstar.entity.Category</class>
+
+
+ <properties>
+
+
+ <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
+
+
+ <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/servletjpa" />
+
+
+ <property name="jakarta.persistence.jdbc.user" value="root" />
+
+
+ <property name="jakarta.persistence.jdbc.password" value="1234567@a$" />
+
+
+ <property name="jakarta.persistence.schema-generation.database.action" value="create" />
+
+
+ <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+
+
+ <property name="hibernate.show_sql" value="true" />
+
+
+ <property name="hibernate.format_sql" value="true" />
+
+
+ </properties>
+
+
+ </persistence-unit> -->
+
+
+<persistence-unit name="jpa-hibernate-mysql">
+
+
+<class>vn.iotstar.entity.Category</class>
+
+
+<class>vn.iotstar.entity.Video</class>
+
+
+<properties>
+
+
+<property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=jakartaJPA" />
+
+
+<property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+
+
+<property name="jakarta.persistence.jdbc.user" value="sa" />
+
+
+<property name="jakarta.persistence.jdbc.password" value="1234567@a$" />
+
+
+<property name="hibernate.show_sql" value="true" />
+
+
+<property name="hibernate.format_sql" value="true" />
+
+
+<property name="hibernate.hbm2ddl.auto" value="update" />
+
+
+<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServer2012Dialect"/>
+
+
+</properties>
+
+
+</persistence-unit>
+
+
+
+</persistence>
+
+
+
+3. Tạo entity
+
+
+
+
+package vn.iotstar.entity;
+
+
+import java.io.Serializable;
+
+
+import java.util.List;
+
+
+
+import jakarta.persistence.*;
+
+
+
+
+
+
+@Entity
+
+
+@Table(name="categories")
+
+
+@NamedQuery(name="Category.findAll", query="SELECT c FROM Category c")
+
+
+public class Category implements Serializable {
+
+
+ private static final long serialVersionUID = 1L;
+
+
+
+ @Id
+
+
+ @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+
+ @Column(name="categoryId")
+
+
+ private int categoryId;
+
+
+
+ @Column(name="categoryname", columnDefinition ="NVARCHAR(255) NULL")
+
+
+ private String categoryname;
+
+
+ 
+
+
+ @Column(name="images", columnDefinition ="NVARCHAR(255) NULL")
+
+
+ private String images;
+
+
+ 
+
+
+ @Column(name="status")
+
+
+ private int status;
+
+
+ //bi-directional many-to-one association to Video
+
+
+ @OneToMany(mappedBy="categories")
+
+
+ private List<Video> videos;
+
+
+ 
+
+
+ public Category() {
+
+
+ }
+
+
+
+ public int getCategoryId() {
+
+
+ return this.categoryId;
+
+
+ }
+
+
+
+ public void setCategoryId(int categoryId) {
+
+
+ this.categoryId = categoryId;
+
+
+ }
+
+
+
+ 
+
+
+
+ 
+
+
+
+ public String getCategoryname() {
+
+
+ return categoryname;
+
+
+ }
+
+
+
+ public void setCategoryname(String categoryname) {
+
+
+ this.categoryname = categoryname;
+
+
+ }
+
+
+ 
+
+
+
+ public String getImages() {
+
+
+ return images;
+
+
+ }
+
+
+
+ public void setImages(String images) {
+
+
+ this.images = images;
+
+
+ }
+
+
+
+ public int getStatus() {
+
+
+ return status;
+
+
+ }
+
+
+
+ public void setStatus(int status) {
+
+
+ this.status = status;
+
+
+ }
+
+
+
+ public List<Video> getVideos() {
+
+
+ return this.videos;
+
+
+ }
+
+
+
+ public void setVideos(List<Video> videos) {
+
+
+ this.videos = videos;
+
+
+ }
+
+
+
+ public Video addVideo(Video video) {
+
+
+ getVideos().add(video);
+
+
+ video.setCategory(this);
+
+
+
+ return video;
+
+
+ }
+
+
+
+ public Video removeVideo(Video video) {
+
+
+ getVideos().remove(video);
+
+
+ video.setCategory(null);
+
+
+
+ return video;
+
+
+ }
+
+
+}
+
+
+
+=========
+
+
+
+
+package vn.iotstar.entity;
+
+
+import java.io.Serializable;
+
+
+import java.util.List;
+
+
+import jakarta.persistence.*;
+
+
+
+@Entity
+
+
+@Table(name="videos")
+
+
+@NamedQuery(name="Video.findAll", query="SELECT v FROM Video v")
+
+
+public class Video implements Serializable {
+
+
+ private static final long serialVersionUID = 1L;
+
+
+
+ @Id
+
+
+ @Column(name="videoId")
+
+
+ private String videoId;
+
+
+
+ @Column(name="active")
+
+
+ private boolean active;
+
+
+
+ @Column(name="description", columnDefinition ="NVARCHAR(MAX) NULL")
+
+
+ private String description;
+
+
+
+ @Column(name="poster", columnDefinition ="NVARCHAR(255) NULL")
+
+
+ private String poster;
+
+
+
+ @Column(name="title", columnDefinition ="NVARCHAR(255) NULL")
+
+
+ private String title;
+
+
+
+ @Column(name="views")
+
+
+ private int views;
+
+
+
+ //bi-directional many-to-one association to Category
+
+
+ @ManyToOne
+
+
+ @JoinColumn(name="categoryId")
+
+
+ private Category categories;
+
+
+
+ public Video() {
+
+
+ }
+
+
+
+ public String getVideoId() {
+
+
+ return this.videoId;
+
+
+ }
+
+
+
+ public void setVideoId(String videoId) {
+
+
+ this.videoId = videoId;
+
+
+ }
+
+
+
+ public boolean getActive() {
+
+
+ return this.active;
+
+
+ }
+
+
+
+ public void setActive(boolean active) {
+
+
+ this.active = active;
+
+
+ }
+
+
+
+ 
+
+
+ public String getDescription() {
+
+
+ return description;
+
+
+ }
+
+
+
+ public void setDescription(String description) {
+
+
+ this.description = description;
+
+
+ }
+
+
+
+ public String getPoster() {
+
+
+ return poster;
+
+
+ }
+
+
+
+ public void setPoster(String poster) {
+
+
+ this.poster = poster;
+
+
+ }
+
+
+
+ public String getTitle() {
+
+
+ return title;
+
+
+ }
+
+
+
+ public void setTitle(String title) {
+
+
+ this.title = title;
+
+
+ }
+
+
+
+ public int getViews() {
+
+
+ return this.views;
+
+
+ }
+
+
+
+ public void setViews(int views) {
+
+
+ this.views = views;
+
+
+ }
+
+
+
+
+ public Category getCategory() {
+
+
+ return this.categories;
+
+
+ }
+
+
+
+ public void setCategory(Category category) {
+
+
+ this.categories = category;
+
+
+ }
+
+
+
+}
+
+
+
+=========
+
+
+4. Configs
+
+
+
+
+package vn.iotstar.config;
+
+
+
+import jakarta.persistence.EntityManager;
+
+
+import jakarta.persistence.EntityManagerFactory;
+
+
+import jakarta.persistence.Persistence;
+
+
+import jakarta.persistence.PersistenceContext;
+
+
+@PersistenceContext
+
+
+public class JpaConfig {
+
+
+ public static EntityManager getEntityManager() {
+
+
+ EntityManagerFactory factory = Persistence.createEntityManagerFactory("jpa-hibernate-mysql");
+
+
+ return factory.createEntityManager();
+
+
+ }
+
+
+}
+
+
+5. test
+
+
+
+
+package vn.iotstar.config;
+
+
+
+import jakarta.persistence.EntityManager;
+
+
+import jakarta.persistence.EntityTransaction;
+
+
+import vn.iotstar.entity.Category;
+
+
+import vn.iotstar.entity.Video;
+
+
+
+public class Test {
+
+
+ public static void main(String[] args) {
+
+
+ EntityManager enma = JpaConfig.getEntityManager();
+
+
+ EntityTransaction trans = enma.getTransaction();
+
+
+ Category cate = new Category();
+
+
+ cate.setCategoryname("Iphone");
+
+
+ cate.setImages("abc.jpg");
+
+
+ cate.setStatus(1);
+
+
+ Video video = new Video();
+
+
+ video.setVideoId("v01");
+
+
+ video.setTitle("test");
+
+
+ video.setCategory(cate);
+
+
+ try {
+
+
+ trans.begin();
+
+
+ enma.persist(cate);
+
+
+ enma.persist(video);
+
+
+ trans.commit();
+
+
+ } catch (Exception e) {
+
+
+ e.printStackTrace();
+
+
+ trans.rollback();
+
+
+ throw e;
+
+
+ }finally {
+
+
+ enma.close();
+
+
+ }
+
+
+ }
+
+
+}
+ 
+Bạn đang đăng nhập với tên Nguyen Dang Khoa (Thoát)
+Copyright HCM-UTE © 2025
