@@ -1,9 +1,7 @@
 package vn.iotstar.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name = "categories")
@@ -18,7 +16,6 @@ public class Category implements Serializable {
     private int categoryId;
 
     @Column(name = "categoryname", columnDefinition = "NVARCHAR(255) NULL")
-    @NotEmpty(message = "Không được phép rỗng")
     private String categoryname;
 
     @Column(name = "images", columnDefinition = "NVARCHAR(255) NULL")
@@ -26,10 +23,6 @@ public class Category implements Serializable {
 
     @Column(name = "status")
     private int status;
-
-    // bi-directional many-to-one association to Video
-    @OneToMany(mappedBy = "category")
-    private List<Video> videos;
 
     public Category() {}
 
@@ -51,19 +44,4 @@ public class Category implements Serializable {
 
     public int getStatus() { return status; }
     public void setStatus(int status) { this.status = status; }
-
-    public List<Video> getVideos() { return videos; }
-    public void setVideos(List<Video> videos) { this.videos = videos; }
-
-    public Video addVideo(Video video) {
-        getVideos().add(video);
-        video.setCategory(this);
-        return video;
-    }
-
-    public Video removeVideo(Video video) {
-        getVideos().remove(video);
-        video.setCategory(null);
-        return video;
-    }
 }
