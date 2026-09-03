@@ -13,6 +13,9 @@ public class User implements Serializable {
     private int roleid;
     private String phone;
     private Date createdDate;
+    private boolean isActive;
+    private String otpCode;
+    private Date otpExpired;
 
     public User() {}
 
@@ -42,4 +45,13 @@ public class User implements Serializable {
 
     public Date getCreatedDate() { return createdDate; }
     public void setCreatedDate(Date createdDate) { this.createdDate = createdDate; }
+
+    public boolean isActive() { return isActive; }
+    public void setActive(boolean active) { isActive = active; }
+
+    public String getOtpCode() { return otpCode; }
+    public void setOtpCode(String otpCode) { this.otpCode = otpCode; }
+
+    public Date getOtpExpired() { return otpExpired; }
+    public void setOtpExpired(Date otpExpired) { this.otpExpired = otpExpired; }
 }

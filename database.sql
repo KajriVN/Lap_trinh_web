@@ -28,9 +28,12 @@ CREATE TABLE users (
     avatar      VARCHAR(255) NULL,
     roleid      INT NOT NULL DEFAULT 5,
     phone       VARCHAR(20)  NULL,
-    createddate DATE NULL
+    createddate DATE NULL,
+    is_active   TINYINT(1) DEFAULT 0,
+    otp_code    VARCHAR(6) NULL,
+    otp_expired DATETIME NULL
 );
 
 -- Tai khoan demo: trung / 123
-INSERT INTO users (email, username, fullname, password, avatar, roleid, phone, createddate)
-VALUES ('trung@iotstar.vn', 'trung', 'Nguyen Huu Trung', '123', NULL, 1, '0908617108', CURDATE());
+INSERT INTO users (email, username, fullname, password, avatar, roleid, phone, createddate, is_active)
+VALUES ('trung@iotstar.vn', 'trung', 'Nguyen Huu Trung', '123', NULL, 1, '0908617108', CURDATE(), 1);

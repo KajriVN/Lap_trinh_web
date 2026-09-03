@@ -3,7 +3,11 @@ package vn.iotstar.service.impl;
 import vn.iotstar.dao.UserDao;
 import vn.iotstar.dao.impl.UserDaoImpl;
 import vn.iotstar.model.User;
+import vn.iotstar.service.EmailService;
 import vn.iotstar.service.UserService;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class UserServiceImpl implements UserService {
     private final UserDao userDao = new UserDaoImpl();
@@ -15,5 +19,69 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         return null;
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userDao.get(username);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
+    @Override
+    public void register(User user) {
+        userDao.insert(user);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        userDao.update(user);
+    }
+
+    @Override
+    public boolean checkExistUsername(String username) {
+        return userDao.checkExistUsername(username);
+    }
+
+    @Override
+    public boolean checkExistEmail(String email) {
+        return userDao.checkExistEmail(email);
+    }
+
+    @Override
+    public boolean verifyOTP(String username, String otp) {
+        User user = userDao.get(username);
+        if (user != null && user.getOtpCode() != null && user.getOtpExpired() != null) {
+            if (user.getOtpCode().equals(otp) && new Date().before(user.getOtpExpired())) {
+                user.setActive(true);
+                user.setOtpCode(null);
+                user.setOtpExpired(null);
+                userDao.update(user);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean sendOTPForRegistration(String email, String username) {
+        User user = userDao.get(username);
+        if (user != null) {
+            String otp = EmailService.generateOTP();
+            
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MINUTE, 5);
+            Date expiredTime = cal.getTime();
+            
+            user.setOtpCode(otp);
+            user.setOtpExpired(expiredTime);
+            userDao.update(user);
+            
+            return EmailService.sendOTP(email, otp);
+        }
+        return false;
     }
 }
