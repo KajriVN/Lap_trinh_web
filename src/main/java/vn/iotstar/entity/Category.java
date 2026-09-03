@@ -2,6 +2,7 @@ package vn.iotstar.entity;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "categories")
@@ -24,6 +25,9 @@ public class Category implements Serializable {
     @Column(name = "status")
     private int status;
 
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Product> products;
+
     public Category() {}
 
     public Category(int categoryId, String categoryname, String images, int status) {
@@ -44,4 +48,7 @@ public class Category implements Serializable {
 
     public int getStatus() { return status; }
     public void setStatus(int status) { this.status = status; }
+
+    public List<Product> getProducts() { return products; }
+    public void setProducts(List<Product> products) { this.products = products; }
 }
