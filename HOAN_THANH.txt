@@ -1,0 +1,43 @@
+# HOÀN THÀNH BÀI TẬP 02
+
+## ✅ Đã làm xong tất cả
+
+### Link GitHub nộp bài:
+**https://github.com/KajriVN/Lap_trinh_web**
+
+### Các chức năng đã làm:
+1. ✅ Đăng ký tài khoản với OTP qua email
+2. ✅ Đăng nhập
+3. ✅ Quên mật khẩu với OTP
+4. ✅ Thêm bảng products (1-n với category)
+5. ✅ CRUD Products với upload Multipart
+6. ✅ Hiển thị 10 sản phẩm mới nhất trang chủ
+7. ✅ Phân trang 6 sản phẩm/trang
+8. ✅ Chi tiết sản phẩm
+
+### Số lượng commits: 4
+1. "xong het roi day nha thay oi, co dang ky voi OTP qua email, dang nhap, quen mat khau, CRUD product, hien thi san pham o trang chu va phan trang, chi tiet san pham nua, code chay ngon lam thay a"
+2. "cap nhat README.md day du huong dan su dung ca BT1 va BT2 luon nhe thay"
+3. "them bao cao chi tiet tung task da lam xong het roi nhe thay, day du tu task 2 den task 10 luon"
+4. "done"
+
+### Tài liệu:
+- README.md - Hướng dẫn đầy đủ
+- BAO_CAO_BT02.md - Báo cáo chi tiết từng task
+- HUONG_DAN.md - Hướng dẫn ngắn gọn
+
+### Chạy project:
+```bash
+mvn clean package
+mvn jetty:run
+```
+
+Truy cập: http://localhost:9090/BT1/home
+
+### Lưu ý:
+- Cần cấu hình Gmail App Password trong EmailService.java
+- Chạy database.sql trước
+- Tài khoản test: trung / 123
+
+---
+Ngày hoàn thành: 03/09/2026
