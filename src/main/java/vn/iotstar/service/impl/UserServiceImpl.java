@@ -84,4 +84,38 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    @Override
+    public boolean sendOTPForResetPassword(String email) {
+        User user = userDao.findByEmail(email);
+        if (user != null) {
+            String otp = EmailService.generateOTP();
+            
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MINUTE, 5);
+            Date expiredTime = cal.getTime();
+            
+            user.setOtpCode(otp);
+            user.setOtpExpired(expiredTime);
+            userDao.update(user);
+            
+            return EmailService.sendResetPasswordOTP(email, otp);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean resetPassword(String email, String otp, String newPassword) {
+        User user = userDao.findByEmail(email);
+        if (user != null && user.getOtpCode() != null && user.getOtpExpired() != null) {
+            if (user.getOtpCode().equals(otp) && new Date().before(user.getOtpExpired())) {
+                user.setPassWord(newPassword);
+                user.setOtpCode(null);
+                user.setOtpExpired(null);
+                userDao.update(user);
+                return true;
+            }
+        }
+        return false;
+    }
 }

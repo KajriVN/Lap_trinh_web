@@ -12,4 +12,6 @@ public interface UserService {
     boolean checkExistEmail(String email);
     boolean verifyOTP(String username, String otp);
     boolean sendOTPForRegistration(String email, String username);
+    boolean sendOTPForResetPassword(String email);
+    boolean resetPassword(String email, String otp, String newPassword);
 }

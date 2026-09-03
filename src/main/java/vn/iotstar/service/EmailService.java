@@ -53,4 +53,12 @@ public class EmailService {
                 "<p>Ma nay se het han sau 5 phut.</p>";
         return sendEmail(toEmail, subject, content);
     }
+
+    public static boolean sendResetPasswordOTP(String toEmail, String otp) {
+        String subject = "Yeu cau dat lai mat khau";
+        String content = "<h2>Ma OTP de dat lai mat khau cua ban la:</h2>" +
+                "<h1 style='color: red;'>" + otp + "</h1>" +
+                "<p>Ma nay se het han sau 5 phut.</p>";
+        return sendEmail(toEmail, subject, content);
+    }
 }
